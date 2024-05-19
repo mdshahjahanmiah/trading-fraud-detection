@@ -4,8 +4,8 @@ This project implements a real-time fraud detection system for cryptocurrency tr
 
 ## Features
 
-- **Enabled Sources Configuration**: Perform operations based on enabled sources.
-- **Real-time Data Fetching**: Continuously fetches enabled source cryptocurrency price data, e.g., Binance.
+- **Enabled Sources**: Perform operations based on enabled sources.
+- **Real-time Data Fetching**: Continuously fetches enabled source cryptocurrency price data, e.g., Binance, CoinGecko.
 - **Isolation Forest**: Implements an isolation forest for anomaly detection.
 - **Anomaly Detection**: Detects anomalies in the price data and reports them.
 - **Statistics Reporting**: Provides statistics on the total number of items and anomalies detected.
@@ -41,3 +41,28 @@ An isolation forest is an ensemble-based anomaly detection method. It isolates o
 
 ### Anomaly Detection
 Anomalies are detected based on the anomaly score. The score is calculated using the path length from the root node to the terminating node. A higher score indicates a higher likelihood of the point being an anomaly.
+
+## Acknowledgements
+This project uses data from Binance and CoinGecko APIs.
+
+## License
+This project is licensed under the Apache License, Version 2.0 with a Non-Production Use Clause. See the LICENSE file for details.
+
+   ```sh
+Copyright 2024 Miah Md Shahjahan
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+   ```
+
+
+
