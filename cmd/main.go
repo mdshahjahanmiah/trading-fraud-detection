@@ -4,6 +4,7 @@ import (
 	"github.com/mdshahjahanmiah/fraud-detection/pkg/config"
 	"github.com/mdshahjahanmiah/fraud-detection/pkg/source"
 	"log/slog"
+	"strings"
 )
 
 func main() {
@@ -18,17 +19,28 @@ func main() {
 	anomalyChan := make(chan string)
 	statsChan := make(chan string)
 
-	binanceSource := source.NewBinanceSource(conf)
-	go binanceSource.Start(errCh, doneCh, anomalyChan, statsChan)
+	enabledSources := strings.Split(conf.EnabledSources, ";")
+	for _, src := range enabledSources {
+		switch strings.TrimSpace(src) {
+		case "binance":
+			binanceSource := source.NewBinanceSource(conf)
+			go binanceSource.Start(errCh, doneCh, anomalyChan, statsChan)
+		case "coingecko":
+			coinGeckoSource := source.NewCoinGeckoSource(conf)
+			go coinGeckoSource.Start(errCh, doneCh, anomalyChan, statsChan)
+		default:
+			slog.Warn("unknown source", "source", src)
+		}
+	}
 
 	for {
 		select {
 		case err := <-errCh:
 			slog.Error("error", "err", err)
 		case anomaly := <-anomalyChan:
-			slog.Info("found anomalies", "anomaly", anomaly)
+			slog.Warn("found anomalies", "anomaly", anomaly)
 		case stats := <-statsChan:
-			slog.Info("statistics", "stats", stats)
+			slog.Info("anomalies statistics", "stats", stats)
 		case <-doneCh:
 			slog.Info("processing completed")
 			return
