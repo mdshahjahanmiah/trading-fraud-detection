@@ -1,10 +1,11 @@
 # Real-Time Fraud Detection in Cryptocurrency Trading
 
-This project implements a real-time fraud detection system for cryptocurrency trading using Go (Golang). The system fetches price data from the Binance API, builds an isolation forest for anomaly detection, and reports detected anomalies along with statistics. The system is designed to run continuously, fetching new data at regular intervals and processing it to detect potential fraudulent activities.
+This project implements a real-time fraud detection system for cryptocurrency trading using Go. The system fetches price data from the different sources, for instance Binance, CoinGecko, builds an isolation forest for anomaly detection, and reports detected anomalies along with statistics. The system is designed to run continuously, fetching new data at regular intervals and processing it to detect potential fraudulent activities.
 
 ## Features
 
-- **Real-time Data Fetching**: Continuously fetches cryptocurrency price data, e.g., Binance.
+- **Enabled Sources Configuration**: Perform operations based on enabled sources.
+- **Real-time Data Fetching**: Continuously fetches enabled source cryptocurrency price data, e.g., Binance.
 - **Isolation Forest**: Implements an isolation forest for anomaly detection.
 - **Anomaly Detection**: Detects anomalies in the price data and reports them.
 - **Statistics Reporting**: Provides statistics on the total number of items and anomalies detected.
@@ -31,8 +32,8 @@ The main entry point of the application is the main.go file. The application fet
 ## Project Structure
 - `main.go`: Entry point of the application.
 - `source/source.go`: Contains the source e.g., BinanceSource struct and methods for fetching price data.
-- `procedure/procedure.go`: Contains functions for building the isolation forest.
-- `detect/detect.go`: Contains functions for detecting anomalies.
+- `procedure/isolation_forest.go`: Contains functions for building the isolation forest.
+- `detect/anomalies.go`: Contains functions for detecting anomalies.
 
 ## Implementation Details
 ### Isolation Forest

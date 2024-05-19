@@ -16,6 +16,12 @@ import (
 
 var _ Source = &BinanceSource{}
 
+// BinancePrice represents a price data point.
+type BinancePrice struct {
+	Symbol string  `json:"symbol"`
+	Price  float64 `json:"price,string"`
+}
+
 // BinanceSource represents a source for fetching prices from Binance.
 type BinanceSource struct {
 	Host      string
@@ -26,10 +32,11 @@ type BinanceSource struct {
 func NewBinanceSource(config config.Config) Source {
 	return &BinanceSource{
 		Host:      config.Sources.BinanceHost,
-		Threshold: config.Sources.Threshold,
+		Threshold: config.Sources.BinanceThreshold,
 	}
 }
 
+// Name returns the name of the data source, which is "binance".
 func (binanceSource *BinanceSource) Name() string {
 	return "binance"
 }
