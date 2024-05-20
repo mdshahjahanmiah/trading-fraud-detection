@@ -45,6 +45,7 @@ func (coinGeckoSource *CoinGeckoSource) Name() string {
 // It sends errors, anomalies, and statistics through their respective channels.
 func (coingeckoSource *CoinGeckoSource) Start(errorChan chan error, doneChan chan struct{}, anomalyChan chan string, statsChan chan string) {
 	go func() {
+		defer close(doneChan) // Ensure doneChan is closed when the goroutine exits
 		for {
 			prices, err := coingeckoSource.FetchPrices()
 			if err != nil {
@@ -82,6 +83,9 @@ func (coingeckoSource *CoinGeckoSource) Start(errorChan chan error, doneChan cha
 
 			// Set the threshold to the 99.99th percentile (top 0.1% anomalies)
 			thresholdIndex := int(0.9999 * float64(len(sortedScores)))
+			if thresholdIndex >= len(sortedScores) {
+				thresholdIndex = len(sortedScores) - 1
+			}
 			threshold := sortedScores[thresholdIndex]
 
 			slog.Info("anomaly score", "source", coingeckoSource.Name(), "threshold", threshold)
@@ -98,7 +102,6 @@ func (coingeckoSource *CoinGeckoSource) Start(errorChan chan error, doneChan cha
 
 			time.Sleep(5 * time.Second)
 		}
-		close(doneChan)
 	}()
 }
 
