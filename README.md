@@ -45,7 +45,7 @@ Anomalies are detected based on the anomaly score. The score is calculated using
 ## Further Improvements
 ### Enhanced Data Sources
 #### Additional Data Sources: 
-Integrate more data sources, including other major exchanges (e.g., Kraken, Coinbase) and blockchain data providers. This diversity can improve the robustness of your anomaly detection.
+Integrate more data sources, including other major exchanges (e.g., Kraken, Coinbase) and blockchain data providers. This diversity can improve the robustness of anomaly detection.
 
 ### Improved Anomaly Detection Techniques
 #### Hybrid Models: 
