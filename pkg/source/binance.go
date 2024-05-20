@@ -45,6 +45,7 @@ func (binanceSource *BinanceSource) Name() string {
 // It sends errors, anomalies, and statistics through their respective channels.
 func (binanceSource *BinanceSource) Start(errorChan chan error, doneChan chan struct{}, anomalyChan chan string, statsChan chan string) {
 	go func() {
+		defer close(doneChan) // Ensure doneChan is closed when the goroutine exits
 		for {
 			// Fetch prices from Binance
 			prices, err := binanceSource.FetchPrices()
@@ -56,7 +57,7 @@ func (binanceSource *BinanceSource) Start(errorChan chan error, doneChan chan st
 
 			// Check if any prices were fetched
 			if len(prices) == 0 {
-				errorChan <- fmt.Errorf("no prices fetched :%s", binanceSource.Name())
+				errorChan <- fmt.Errorf("no prices fetched: %s", binanceSource.Name())
 				time.Sleep(5 * time.Second)
 				continue
 			}
@@ -87,6 +88,9 @@ func (binanceSource *BinanceSource) Start(errorChan chan error, doneChan chan st
 
 			// Set the threshold to the 99th percentile (top 1% anomalies)
 			thresholdIndex := int(binanceSource.Threshold * float64(len(sortedScores)))
+			if thresholdIndex >= len(sortedScores) {
+				thresholdIndex = len(sortedScores) - 1
+			}
 			threshold := sortedScores[thresholdIndex]
 
 			slog.Info("anomaly score", "source", binanceSource.Name(), "threshold", threshold)
@@ -101,11 +105,10 @@ func (binanceSource *BinanceSource) Start(errorChan chan error, doneChan chan st
 			}
 
 			// Send statistics through the stats channel
-			statsChan <- fmt.Sprintf("source:%s ,total items: %d, Anomalies: %d", binanceSource.Name(), rows, anomalyCount)
+			statsChan <- fmt.Sprintf("source: %s, total items: %d, anomalies: %d", binanceSource.Name(), rows, anomalyCount)
 
 			time.Sleep(5 * time.Second)
 		}
-		close(doneChan)
 	}()
 }
 
